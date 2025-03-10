@@ -1,11 +1,213 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Pro IPTV</title>
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pro IPTV</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #6e48aa, #9b59b6);
+      min-height: 100vh;
+      color: white;
+    }
+
+    /* Toolbar */
+    .toolbar {
+      background-color: #007bff;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .toolbar .logo {
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .toolbar .brand {
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .toolbar .search {
+      display: flex;
+      align-items: center;
+    }
+
+    .toolbar input {
+      padding: 5px;
+      border: none;
+      border-radius: 5px 0 0 5px;
+      outline: none;
+    }
+
+    .toolbar button {
+      padding: 5px 10px;
+      border: none;
+      background: #fff;
+      color: #007bff;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .toolbar button:hover {
+      background: #e0e0e0;
+    }
+
+    /* Main Layout */
+    .container {
+      display: flex;
+      padding: 20px;
+      height: calc(100vh - 60px);
+    }
+
+    .channel-list {
+      width: 30%;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 15px;
+      overflow-y: auto;
+    }
+
+    .category {
+      margin-bottom: 15px;
+    }
+
+    .category h3 {
+      cursor: pointer;
+      margin: 0;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 5px;
+    }
+
+    .channel {
+      padding: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .channel:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 5px;
+    }
+
+    .video-player {
+      width: 70%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 10px;
+      margin-left: 20px;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    .placeholder {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      .channel-list, .video-player {
+        width: 100%;
+        margin: 0 0 20px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="brand">
+      <img src="https://via.placeholder.com/40" alt="Logo" class="logo">
+      Pro IPTV
+    </div>
+    <div class="search">
+      <input type="text" id="searchInput" placeholder="Search Channels" onkeyup="filterChannels()">
+      <button onclick="filterChannels()">Search</button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="channel-list" id="channelList">
+      <div class="category">
+        <h3 onclick="toggleCategory(this)">Sports</h3>
+        <div class="channels">
+          <div class="channel" onclick="playVideo('http://example.com/espn.m3u8')">ESPN</div>
+          <div class="channel" onclick="playVideo('http://example.com/skysports.m3u8')">Sky Sports</div>
+        </div>
+      </div>
+      <div class="category">
+        <h3 onclick="toggleCategory(this)">Movies</h3>
+        <div class="channels">
+          <div class="channel" onclick="playVideo('http://example.com/hbo.m3u8')">HBO</div>
+          <div class="channel" onclick="playVideo('http://example.com/netflix.m3u8')">Netflix Live</div>
+        </div>
+      </div>
+      <div class="category">
+        <h3 onclick="toggleCategory(this)">News</h3>
+        <div class="channels">
+          <div class="channel" onclick="playVideo('http://example.com/cnn.m3u8')">CNN</div>
+          <div class="channel" onclick="playVideo('http://example.com/bbc.m3u8')">BBC</div>
+        </div>
+      </div>
+    </div>
+    <div class="video-player" id="videoPlayer">
+      <div class="placeholder">Select a channel to start watching</div>
+    </div>
+  </div>
+
+  <script>
+    function playVideo(url) {
+      const videoPlayer = document.getElementById('videoPlayer');
+      videoPlayer.innerHTML = `
+        <video controls autoplay>
+          <source src="${url}" type="application/x-mpegURL">
+          Your browser does not support the video tag.
+        </video>
+      `;
+    }
+
+    function filterChannels() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const channels = document.querySelectorAll('.channel');
+      channels.forEach(channel => {
+        const name = channel.textContent.toLowerCase();
+        channel.style.display = name.includes(query) ? 'block' : 'none';
+      });
+    }
+
+    function toggleCategory(header) {
+      const channels = header.nextElementSibling;
+      channels.style.display = channels.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Initially hide channel lists
+    document.querySelectorAll('.channels').forEach(ch => ch.style.display = 'none');
+  </script>
+</body>
 </html>
