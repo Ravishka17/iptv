@@ -2,7 +2,7 @@
   "name": "iptv-web-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://Ravishka17.github.io/iptv-web-app",
+  "homepage": "https://Ravishka17.github.io/iptv",
   "dependencies": {
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.0",
